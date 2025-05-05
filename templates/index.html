@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Stating page</title>
-</head>
-<body>
-    <form action="#" method="post">
+{% extends "index_login_register_template.html" %}
+{% block title %} Main page {% endblock %}
+{% block content %}
+    <form action="#" method="post" class="flex-column-center">
         <button type="submit" name=submit value="Login">Login</button>
         <button type="submit" name=submit value="Register">Register</button>
     </form>
-</body>
-</html>
+{% endblock %}

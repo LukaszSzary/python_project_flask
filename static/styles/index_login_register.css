@@ -1,0 +1,53 @@
+*{
+    margin:0;
+    padding: 0;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.flex-column-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+}
+
+label{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+label + label{
+    margin-top: 5px;
+}
+
+.input-submit{
+    margin-top: 10px;
+    width: 70px;
+    padding: 3px;
+    text-align: center;
+}
+
+.msg-div{
+    width: 100%;
+    height: 60px;
+    text-align: center;
+}
+
+button{
+    width: 150px;
+    height: 60px;
+}
+
+button + button{
+    margin-top: 10px;
+}
