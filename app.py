@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
 import os
+import hashlib
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -22,7 +23,9 @@ def login(error_msg = ''):
         login = request.form['login']
         password = request.form['password']
 
-        user = collection.find_one({
+        password = hashlib.sha512(bytes(password,'UTF-8')).hexdigest()
+
+        user = usersCollection.find_one({
             'login': login.strip(),
             'password': password.strip()
         })
@@ -43,8 +46,10 @@ def register(error_msg = ''):
         if password1 != password2:
             return render_template('register.html', error_msg='Passwords do not match')
 
+        password1 = hashlib.sha512(bytes(password1,'UTF-8')).hexdigest()
+
         data = {'login': login, 'password': password1}
-        if collection.insert_one(data).acknowledged:
+        if usersCollection.insert_one(data).acknowledged:
             return redirect(url_for('home', text=f'{login} {password1}'))
 
     return render_template('register.html')
@@ -68,7 +73,7 @@ except Exception as e:
 db = client['db_Flask']
 
 # Create collection named data if it doesn't exist already
-collection = db['db_Flask']
+usersCollection = db['users']
 
 if __name__ == '__main__':
     app.run(debug=True)
