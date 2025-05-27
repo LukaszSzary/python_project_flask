@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
-from pymongo import MongoClient
-from pymongo.server_api import ServerApi
-import os
 import hashlib
+import db
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -25,7 +23,7 @@ def login(error_msg = ''):
 
         password = hashlib.sha512(bytes(password,'UTF-8')).hexdigest()
 
-        user = usersCollection.find_one({
+        user = db.usersCollection.find_one({
             'login': login.strip(),
             'password': password.strip()
         })
@@ -49,7 +47,7 @@ def register(error_msg = ''):
         password1 = hashlib.sha512(bytes(password1,'UTF-8')).hexdigest()
 
         data = {'login': login, 'password': password1}
-        if usersCollection.insert_one(data).acknowledged:
+        if db.usersCollection.insert_one(data).acknowledged:
             return redirect(url_for('home', text=f'{login} {password1}'))
 
     return render_template('register.html')
@@ -57,23 +55,6 @@ def register(error_msg = ''):
 @app.route('/home/<text>/', methods=['GET', 'POST'])
 def home(text = ''):  # put application's code here
     return f'{text}!'
-
-uri = os.environ['MONGO_FLASK']
-
-# Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
-# Send a ping to confirm a successful connection
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
-
-# Create database named demo if they don't exist already
-db = client['db_Flask']
-
-# Create collection named data if it doesn't exist already
-usersCollection = db['users']
 
 if __name__ == '__main__':
     app.run(debug=True)
