@@ -3,7 +3,7 @@
 {% block content %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div id="graph"></div>
+<canvas id="graph"></canvas>
 
-<script src="../scripts/home.js"></script>
+<script src="{{ url_for('static', filename='/scripts/home.js') }}"></script>
 {% endblock %}
