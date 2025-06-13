@@ -19,3 +19,4 @@ db = client['db_Flask']
 # Create collection named data if it doesn't exist already
 usersCollection = db['users']
 wartoscCollection = db['dane']
+codesCollection = db['kody_nazwy']

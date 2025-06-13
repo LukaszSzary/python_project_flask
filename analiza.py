@@ -4,11 +4,15 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from pymongo import MongoClient
+import data_from_api
+
 
 # Dane wejściowe jako string CSV
 
 # Wczytaj dane do DataFrame
-df = pd.read_csv('./dane.csv', delimiter=';', decimal=',')
+
+df = data_from_api.get_data_from_api()
+print(f"Liczba wierszy w DataFrame: {len(df)}")
 
 #sprawdzenie czy kolumna z indeksem jest pusta lub ma nazwe Unnamed
 if '' in df.columns:
@@ -57,14 +61,17 @@ kody_nazwy = df[['Kod', 'Nazwa']].set_index('Kod').to_dict()['Nazwa']
 
 
 #export do MongoDB
-uri = os.environ['MONGO_FLASK']
-client = MongoClient(uri)
-db = client['db_Flask']
+uri = os.environ['MONGO_FLASKs']
+#client = MongoClient(uri)
+#db = client['db_Flask']
 
-collection_dane = db['dane']
+#collection_dane = db['dane']
 
-collection_dane.insert_many(results_df.to_dict('records'))
+#collection_dane.insert_many(results_df.to_dict('records'))
 
 
-collection = db['kody_nazwy']
-collection.insert_many(df[['Kod', 'Nazwa']].to_dict('records'))
+#collection = db['kody_nazwy']
+#collection.insert_many(df[['Kod', 'Nazwa']].to_dict('records'))
+
+print(results_df.tail())
+print(df.tail())
