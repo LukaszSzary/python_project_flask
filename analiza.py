@@ -10,24 +10,8 @@ import data_from_api
 # Dane wejściowe jako string CSV
 
 # Wczytaj dane do DataFrame
-
 df = data_from_api.get_data_from_api()
-print(f"Liczba wierszy w DataFrame: {len(df)}")
 
-#sprawdzenie czy kolumna z indeksem jest pusta lub ma nazwe Unnamed
-if '' in df.columns:
-    df = df.drop(columns=[''])
-elif df.columns[-1].startswith('Unnamed'):
-    df = df.drop(columns=[df.columns[-1]])
-
-#usuniecie slowa ogółem
-def rename_col(col_name):
-    parts = col_name.split(';')
-    if len(parts) == 3:
-        return parts[1]  # wybieramy środkową część, czyli rok np. '2002'
-    return col_name  # jeśli format inny, zostawiamy nazwę bez zmian
-
-df.columns = [rename_col(col) for col in df.columns]
 
 #usunięcie całego wiersza, jesli ma pusta wartosc
 df = df.dropna()
@@ -61,7 +45,8 @@ kody_nazwy = df[['Kod', 'Nazwa']].set_index('Kod').to_dict()['Nazwa']
 
 
 #export do MongoDB
-uri = os.environ['MONGO_FLASKs']
+uri = os.environ['MONGO_FLASK']
+
 #client = MongoClient(uri)
 #db = client['db_Flask']
 

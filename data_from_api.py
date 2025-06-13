@@ -73,3 +73,4 @@ def get_data_from_api():
     df_sorted = df.sort_values(by="Kod").reset_index(drop=True)
 
     print(df_sorted)
+    return df_sorted
