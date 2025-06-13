@@ -1,0 +1,9 @@
+{% extends "index_login_register_template.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<canvas id="graph"></canvas>
+
+<script src="{{ url_for('static', filename='/scripts/home.js') }}"></script>
+{% endblock %}
