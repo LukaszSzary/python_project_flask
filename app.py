@@ -30,7 +30,7 @@ def login(error_msg = ''):
         if user is None:
             return render_template('login.html', error_msg = 'Such user does not exists!')
 
-        return redirect(url_for('home', text=f'{login} {password}'))
+        return redirect(url_for('home'))
     else:
         return render_template('login.html')
 
@@ -48,13 +48,14 @@ def register(error_msg = ''):
 
         data = {'login': login, 'password': password1}
         if db.usersCollection.insert_one(data).acknowledged:
-            return redirect(url_for('home', text=f'{login} {password1}'))
+            return redirect(url_for('home'))
 
     return render_template('register.html')
 
-@app.route('/home/<text>/', methods=['GET', 'POST'])
-def home(text = ''):  # put application's code here
-    return f'{text}!'
+
+@app.route('/home/', methods=['GET', 'POST'])
+def home():  # put application's code here
+    return render_template('home.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
