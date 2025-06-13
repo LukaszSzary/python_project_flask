@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 import hashlib
 import db
 app = Flask(__name__)
@@ -57,5 +57,22 @@ def register(error_msg = ''):
 def home():  # put application's code here
     return render_template('home.html')
 
+
+@app.route('/get_data/<kod>', methods=['GET', 'POST'])
+def get_data(kod):
+    try:
+        dokument = db.wartoscCollection.find_one({'Kod': int(kod)})
+    except ValueError:
+        return jsonify({'error': 'Invalid kod value'}), 400
+
+    if dokument:
+        # Zamiana ObjectId na string albo usunięcie
+        dokument['_id'] = str(dokument['_id'])  # lub: dokument.pop('_id')
+
+        return jsonify(dokument)
+    else:
+        return jsonify({'error': 'Value not found'}), 404
+    
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5001)
