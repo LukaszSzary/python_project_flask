@@ -1,13 +1,13 @@
 const ctx = document.getElementById('graph');
-main()
+
+fillCitySelectLList();
+
 let mixedChart = undefined;
 
 async function main(code = 0) {
 
-  const APIdata = await getData(code);
-  const cityData = await getCity();
-  fillCitySelect(cityData);
 
+  const APIdata = await getData(code);
 
   const xyData = convertObjectToXY(APIdata.values);
   const labelsList = Object.keys(APIdata.values);
@@ -47,9 +47,24 @@ async function main(code = 0) {
       },
       ticks: {
         stepSize: 1 // show label every 5 units
+      },
+      scales: {
+        x: {
+          type: 'category', // <--- KLUCZOWA ZMIANA
+          title: {
+            display: true,
+            text: 'Rok'
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Wynagrodzenie'
+          }
+        }
+
       }
     }
-
   });
 }
 
@@ -113,17 +128,17 @@ function convertObjectToXY(obj) {
 function countRegVal(data) {
   tab = [];
   args = Object.keys(data.values);
-  console.log(args);
+
   args.forEach((x) => tab.push(data.a * x + data.b));
 
   return tab;
 }
 
 
-function fillCitySelect(cityData) {
+async function fillCitySelectLList() {
 
   const select = document.getElementById('menu');
-
+  const cityData = await getCity();
 
   // Generowanie opcji
   cityData.forEach(city => {
@@ -133,7 +148,7 @@ function fillCitySelect(cityData) {
     option.value = city['Kod'];
     select.appendChild(option);
   });
-
+  main(0);
   // Przejście do wybranej strony po zmianie
   select.addEventListener('change', function () {
     const wybranyLink = this.value;
