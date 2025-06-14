@@ -75,4 +75,3 @@ def get_data_from_api():
     print(df_sorted)
     return df_sorted
 
-get_data_from_api()

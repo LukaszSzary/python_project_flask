@@ -1,16 +1,24 @@
 const ctx = document.getElementById('graph');
 main()
+let mixedChart = undefined;
 
-async function main() {
+async function main(code = 0) {
 
-  const APIdata = await getData(0);
-  console.log(APIdata);
+  const APIdata = await getData(code);
+  const cityData = await getCity();
+  fillCitySelect(cityData);
+
 
   const xyData = convertObjectToXY(APIdata.values);
   const labelsList = Object.keys(APIdata.values);
   const regressionValues = countRegVal(APIdata);
 
-  const mixedChart = new Chart(ctx, {
+
+  if (mixedChart !== undefined) {
+    mixedChart.destroy(); // Destroy the previous chart instance if it exists
+  }
+
+  mixedChart = new Chart(ctx, {
     data: {
       datasets: [{
         type: 'scatter',
@@ -69,6 +77,32 @@ async function getData(code) {
 
 };
 
+async function getCity() {
+  try {
+    const response = await fetch(`http://127.0.0.1:5001/get_codes/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    return data;
+
+
+  } catch (error) {
+    console.error('Błąd podczas pobierania danych:', error);
+  }
+
+};
+
+
+
 function convertObjectToXY(obj) {
   return Object.entries(obj).map(([x, y]) => ({
     x: Number(x),  // Convert year string to number
@@ -83,4 +117,28 @@ function countRegVal(data) {
   args.forEach((x) => tab.push(data.a * x + data.b));
 
   return tab;
+}
+
+
+function fillCitySelect(cityData) {
+
+  const select = document.getElementById('menu');
+
+
+  // Generowanie opcji
+  cityData.forEach(city => {
+    const option = document.createElement('option');
+
+    option.textContent = city['Nazwa'];
+    option.value = city['Kod'];
+    select.appendChild(option);
+  });
+
+  // Przejście do wybranej strony po zmianie
+  select.addEventListener('change', function () {
+    const wybranyLink = this.value;
+    if (wybranyLink) {
+      main(wybranyLink);
+    }
+  });
 }
